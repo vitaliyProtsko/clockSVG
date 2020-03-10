@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clock svg</title>
+</head>
+<body>
+
+    <svg id="clock" width='300' height='300'></svg>
+
+    <script>
+        'use strict'
+
+        var clockSVG = document.getElementById('clock')
+
+        var clockCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle')
+        clockCircle.setAttribute('cx', 150)
+        clockCircle.setAttribute('cy', 150)
+        clockCircle.setAttribute('r', 150)
+        clockCircle.setAttribute('fill', 'rgb(235, 193, 103)')
+        clockSVG.appendChild(clockCircle)
+
+        var digitalClock = document.createElementNS("http://www.w3.org/2000/svg", 'text')
+        digitalClock.setAttribute('x', 107)
+        digitalClock.setAttribute('y', 100)
+        digitalClock.setAttribute('font-size', '1.5rem')
+        clockSVG.appendChild(digitalClock)
+
+        var number = 0
+        for (var i = 0; i <= 12; i++) {
+            var numberCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle')
+            var angle = i * (360 / 12) / 180 * Math.PI
+            var elementCenterX = 150 + 120 * Math.sin(angle)
+            var elementCenterY = 150 - 120 * Math.cos(angle)
+            numberCircle.setAttribute('cx', Math.round(elementCenterX))
+            numberCircle.setAttribute('cy', Math.round(elementCenterY))
+            numberCircle.setAttribute('r', 20)
+            numberCircle.setAttribute('fill', 'rgb(70, 185, 60)')
+            clockSVG.appendChild(numberCircle)
+
+            var hourNumber = document.createElementNS("http://www.w3.org/2000/svg", 'text')
+            hourNumber.setAttribute('x', Math.round(elementCenterX))
+            hourNumber.setAttribute('y', Math.round(elementCenterY))
+            hourNumber.setAttribute('text-anchor', 'middle')
+            hourNumber.setAttribute('dominant-baseline', 'central')
+            hourNumber.textContent = number
+            clockSVG.appendChild(hourNumber)
+
+            number++
+        }
+
+        var hourHand = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+        hourHand.setAttribute('x1', 150)
+        hourHand.setAttribute('y1', 155)
+        hourHand.setAttribute('x2', 150)
+        hourHand.setAttribute('y2', 80)
+        hourHand.setAttribute('stroke-width', 10)
+        hourHand.setAttribute('stroke', 'black')
+        hourHand.setAttribute('stroke-linecap', 'round')
+        hourHand.setAttribute('transform-origin', '150px 150px')
+        clockSVG.appendChild(hourHand)
+
+        var minuteHand = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+        minuteHand.setAttribute('x1', 150)
+        minuteHand.setAttribute('y1', 155)
+        minuteHand.setAttribute('x2', 150)
+        minuteHand.setAttribute('y2', 40)
+        minuteHand.setAttribute('stroke-width', 6)
+        minuteHand.setAttribute('stroke', 'black')
+        minuteHand.setAttribute('stroke-linecap', 'round')
+        minuteHand.setAttribute('transform-origin', '150px 150px')
+        clockSVG.appendChild(minuteHand)
+
+        var secondHand = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+        secondHand.setAttribute('x1', 150)
+        secondHand.setAttribute('y1', 155)
+        secondHand.setAttribute('x2', 150)
+        secondHand.setAttribute('y2', 25)
+        secondHand.setAttribute('stroke-width', 2)
+        secondHand.setAttribute('stroke', 'black')
+        secondHand.setAttribute('stroke-linecap', 'round')
+        secondHand.setAttribute('transform-origin', '150px 150px')
+        clockSVG.appendChild(secondHand)
+
+        function setClockTime() {
+            var currentDate = new Date()
+            var hours = currentDate.getHours()
+            var minutes = currentDate.getMinutes()
+            var seconds = currentDate.getSeconds()
+
+            var secondPosition = 360 / 60 * seconds
+            var minutePosition = 360 / 60 * minutes
+            var hourPosition = 360 / 12 * (hours + minutes / 60)
+
+            secondHand.setAttribute('transform', `rotate(${secondPosition})`)
+            minuteHand.setAttribute('transform', `rotate(${minutePosition})`)
+            hourHand.setAttribute('transform', `rotate(${hourPosition})`)
+
+            var digitalHours = (hours < 10) ? '0' + hours : hours
+            var digitalMinutes = (minutes < 10) ? '0' + minutes : minutes
+            var digitalSeconds = (seconds < 10) ? '0' + seconds : seconds
+            digitalClock.textContent = `${digitalHours}:${digitalMinutes}:${digitalSeconds}`
+        }
+
+        setInterval(setClockTime, 1000)
+
+        setClockTime()
+
+    </script>
+
+</body>
+</html>
